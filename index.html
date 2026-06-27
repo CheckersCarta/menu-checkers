@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Etiquetas anti-caché para forzar la actualización del diseño -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    
     <title>Menú Digital | Checkers</title>
     
     <!-- Importación del Sistema Tipográfico -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Montserrat:wght@800;900&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* Paleta de Colores Extraída del Design System */
+        /* Paleta de Colores */
         :root {
             --primary: #F15A24;
             --secondary: #4D3626;
@@ -17,31 +22,26 @@
             --neutral: #F9F5F0;
             --card-bg: #FFFFFF;
             
-            /* Tipografías */
             --font-headline: 'Montserrat', sans-serif;
             --font-body: 'Work Sans', sans-serif;
             --font-label: 'Be Vietnam Pro', sans-serif;
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--neutral);
             color: var(--secondary);
             font-family: var(--font-body);
             padding: 15px;
-            max-width: 550px; /* Ancho óptimo para lectura móvil */
+            max-width: 550px;
             margin: 0 auto;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Elementos Decorativos de Fondo (Blobs) */
+        /* Luces de Fondo */
         .ambient-light {
             position: fixed;
             width: 350px;
@@ -52,20 +52,12 @@
             z-index: -1;
             pointer-events: none;
         }
-        .light-top { 
-            top: -150px; 
-            left: -150px; 
-            background: var(--primary); 
-        }
-        .light-bottom { 
-            bottom: -100px; 
-            right: -150px; 
-            background: var(--tertiary); 
-        }
+        .light-top { top: -150px; left: -150px; background: var(--primary); }
+        .light-bottom { bottom: -100px; right: -150px; background: var(--tertiary); }
 
         header {
             text-align: center;
-            padding: 40px 0 20px;
+            padding: 30px 0 15px;
         }
 
         header h1 {
@@ -85,38 +77,44 @@
             letter-spacing: 4px;
             text-transform: uppercase;
             font-weight: 700;
-            margin-top: 8px;
+            margin-top: 5px;
         }
 
-        /* Estilos del Dropdown de Categorías (NUEVO) */
-        .category-select-wrapper {
+        /* COMPONENTE DESPLEGABLE (Reemplaza a los botones horizontales) */
+        .dropdown-container {
             position: relative;
-            margin: 15px auto 35px;
-            max-width: 320px;
+            margin: 15px auto 30px auto;
+            width: 90%;
+            max-width: 350px;
         }
 
         #category-select {
             appearance: none;
             -webkit-appearance: none;
+            -moz-appearance: none;
             width: 100%;
+            background-color: var(--primary);
+            color: #FFFFFF;
             font-family: var(--font-label);
-            background: var(--card-bg);
-            color: var(--secondary);
-            border: 2px solid rgba(241, 90, 36, 0.2);
-            padding: 14px 45px 14px 25px;
-            border-radius: 30px;
-            font-size: 1rem;
+            font-size: 1.05rem;
             font-weight: 700;
+            padding: 14px 45px 14px 20px;
+            border: none;
+            border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(77, 54, 38, 0.08);
-            transition: all 0.3s ease;
+            box-shadow: 0 6px 15px rgba(241, 90, 36, 0.3);
+            text-align: center;
             outline: none;
-            text-align: left;
         }
 
         #category-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 8px 25px rgba(241, 90, 36, 0.2);
+            box-shadow: 0 8px 20px rgba(241, 90, 36, 0.4);
+        }
+
+        #category-select option {
+            background-color: var(--card-bg);
+            color: var(--secondary);
+            font-weight: 600;
         }
 
         .dropdown-icon {
@@ -124,10 +122,10 @@
             right: 20px;
             top: 50%;
             transform: translateY(-50%);
-            width: 22px;
-            height: 22px;
-            color: var(--primary);
-            pointer-events: none; /* Permite hacer clic a través del icono */
+            width: 20px;
+            height: 20px;
+            color: #FFFFFF;
+            pointer-events: none;
         }
 
         /* Contenedor de Tarjetas */
@@ -138,32 +136,23 @@
             padding-bottom: 50px;
         }
 
-        /* Diseño de la Tarjeta del Plato */
+        /* Diseño de la Tarjeta */
         .menu-item {
             background: var(--card-bg);
             border-radius: 28px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(77, 54, 38, 0.06);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(241, 90, 36, 0.05);
-        }
-
-        .menu-item:hover, .menu-item:active {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(241, 90, 36, 0.15);
-            border-color: rgba(241, 90, 36, 0.2);
         }
 
         .item-image {
             width: 100%;
-            height: 280px;
+            height: 240px;
             object-fit: cover;
             border-bottom: 4px solid var(--tertiary);
         }
 
-        .item-info {
-            padding: 25px;
-        }
+        .item-info { padding: 25px; }
 
         .item-header {
             display: flex;
@@ -181,7 +170,6 @@
             line-height: 1.2;
         }
 
-        /* Etiqueta de Precio Destacada */
         .item-price {
             font-family: var(--font-label);
             font-size: 1.15rem;
@@ -191,7 +179,6 @@
             padding: 8px 18px;
             border-radius: 20px;
             white-space: nowrap;
-            box-shadow: 0 6px 15px rgba(241, 90, 36, 0.25);
         }
 
         .item-description {
@@ -199,7 +186,6 @@
             font-size: 0.95rem;
             color: rgba(77, 54, 38, 0.7);
             line-height: 1.6;
-            font-weight: 400;
         }
 
         .loader {
@@ -208,13 +194,11 @@
             color: var(--primary);
             font-family: var(--font-label);
             font-weight: 600;
-            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- Luces Ambientales -->
     <div class="ambient-light light-top"></div>
     <div class="ambient-light light-bottom"></div>
 
@@ -223,23 +207,17 @@
         <p>Selección del Día</p>
     </header>
 
-    <!-- Selector de Categorías Desplegable (NUEVO) -->
-    <div class="category-select-wrapper">
+    <!-- EL NUEVO DESPLEGABLE -->
+    <div class="dropdown-container">
         <select id="category-select" onchange="filterCategory(this.value)"></select>
-        <!-- Icono de Flecha -->
-        <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
-        </svg>
+        <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
     </div>
 
-    <!-- Loader Visual -->
-    <div class="loader" id="loader">Preparando la cocina...</div>
+    <div class="loader" id="loader">Conectando con la cocina...</div>
     
-    <!-- Render Dinámico -->
     <div class="menu-container" id="menu-container"></div>
 
     <script>
-        // Endpoint conectado a tu App Script
         const API_URL = 'https://script.google.com/macros/s/AKfycbz8XBI_surAkTyRS_RxYUU75S0MNN-Fz0KLWeAVZG38mTKd7mIUn5OI580x8g3-14ch/exec';
         let menuData = [];
 
@@ -250,32 +228,28 @@
                 
                 document.getElementById('loader').style.display = 'none';
                 
-                // Filtrar disponibles (Columna "Disponible" debe ser "Sí" o "si")
+                // Filtro de disponibilidad
                 menuData = menuData.filter(item => {
                     const disp = String(item['Disponible']).toLowerCase().trim();
                     return disp === 'sí' || disp === 'si';
                 });
                 
-                renderCategories();
+                renderDropdown();
                 renderMenu('todos');
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('loader').innerText = 'Error al cargar el menú. Por favor, refresca la página.';
+                document.getElementById('loader').innerText = 'Error al cargar el menú. Por favor, refresca.';
             }
         }
 
-        // NUEVA FUNCIÓN: Llena el select con las categorías de tu Excel
-        function renderCategories() {
+        // Renderizar las opciones en el <select>
+        function renderDropdown() {
             const select = document.getElementById('category-select');
-            
-            // Extraer nombres de categorías únicos y limpiar espacios
             const uniqueCategories = [...new Set(menuData.map(item => item['Categoría'].trim()))];
             
-            // Crear el HTML de las opciones, empezando siempre por "Todos"
-            let optionsHtml = `<option value="todos">Ver Todas las Categorías</option>`;
+            let optionsHtml = `<option value="todos">Ver Todo el Menú</option>`;
             
             uniqueCategories.forEach(cat => {
-                // Capitalizar solo para mostrar bonito en la lista
                 const displayCat = cat.charAt(0).toUpperCase() + cat.slice(1);
                 optionsHtml += `<option value="${cat}">${displayCat}</option>`;
             });
@@ -283,31 +257,31 @@
             select.innerHTML = optionsHtml;
         }
 
-        // NUEVA FUNCIÓN: Filtra al elegir una opción del dropdown
+        // Función que se activa al cambiar el <select>
         function filterCategory(categoryValue) {
             renderMenu(categoryValue);
         }
 
-        // Función que pinta las tarjetas
+        // Renderizar Platos
         function renderMenu(categoryFilter) {
             const container = document.getElementById('menu-container');
-            
             const filtered = categoryFilter === 'todos' 
                 ? menuData 
                 : menuData.filter(item => item['Categoría'].trim() === categoryFilter);
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="loader">No hay platos disponibles en esta sección.</div>';
+                container.innerHTML = '<div class="loader">No hay platos en esta sección.</div>';
                 return;
             }
 
             container.innerHTML = filtered.map(item => {
-                // Formateador de moneda colombiana
+                // Si el precio está vacío, muestra 0 para que no se rompa el diseño
+                const rawPrice = item['Precio'] || 0;
                 const priceFormatted = new Intl.NumberFormat('es-CO', { 
                     style: 'currency', 
                     currency: 'COP', 
                     maximumFractionDigits: 0 
-                }).format(item['Precio'] || 0); // Maneja precios vacíos como $0 temporalmente
+                }).format(rawPrice);
                 
                 const imageHtml = item['URL Imagen'] && item['URL Imagen'].startsWith('http')
                     ? `<img src="${item['URL Imagen']}" class="item-image" alt="${item['Nombre del Plato']}" loading="lazy">`
@@ -328,7 +302,6 @@
             }).join('');
         }
 
-        // Inicializar
         fetchMenu();
     </script>
 </body>
