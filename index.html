@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú Digital</title>
+    <title>Menú Digital | Checkers</title>
     
+    <!-- Importación del Sistema Tipográfico -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Montserrat:wght@800;900&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
@@ -64,7 +65,7 @@
 
         header {
             text-align: center;
-            padding: 40px 0 25px;
+            padding: 40px 0 20px;
         }
 
         header h1 {
@@ -87,35 +88,46 @@
             margin-top: 8px;
         }
 
-        /* Barra de navegación dinámica */
-        .categories-nav {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding: 10px 5px 30px;
-            scrollbar-width: none;
+        /* Estilos del Dropdown de Categorías (NUEVO) */
+        .category-select-wrapper {
+            position: relative;
+            margin: 15px auto 35px;
+            max-width: 320px;
         }
-        .categories-nav::-webkit-scrollbar { display: none; }
 
-        .category-btn {
+        #category-select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
             font-family: var(--font-label);
             background: var(--card-bg);
             color: var(--secondary);
-            border: 2px solid transparent;
-            padding: 10px 22px;
+            border: 2px solid rgba(241, 90, 36, 0.2);
+            padding: 14px 45px 14px 25px;
             border-radius: 30px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
-            white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(77, 54, 38, 0.08);
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(77, 54, 38, 0.05);
+            outline: none;
+            text-align: left;
         }
 
-        .category-btn.active {
-            background: var(--primary);
-            color: #FFFFFF;
-            box-shadow: 0 8px 20px rgba(241, 90, 36, 0.3);
+        #category-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(241, 90, 36, 0.2);
+        }
+
+        .dropdown-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 22px;
+            height: 22px;
+            color: var(--primary);
+            pointer-events: none; /* Permite hacer clic a través del icono */
         }
 
         /* Contenedor de Tarjetas */
@@ -185,7 +197,7 @@
         .item-description {
             font-family: var(--font-body);
             font-size: 0.95rem;
-            color: rgba(77, 54, 38, 0.7); /* Secundario con opacidad */
+            color: rgba(77, 54, 38, 0.7);
             line-height: 1.6;
             font-weight: 400;
         }
@@ -196,11 +208,13 @@
             color: var(--primary);
             font-family: var(--font-label);
             font-weight: 600;
+            font-size: 1.1rem;
         }
     </style>
 </head>
 <body>
 
+    <!-- Luces Ambientales -->
     <div class="ambient-light light-top"></div>
     <div class="ambient-light light-bottom"></div>
 
@@ -209,10 +223,19 @@
         <p>Selección del Día</p>
     </header>
 
-    <nav class="categories-nav" id="categories-nav"></nav>
+    <!-- Selector de Categorías Desplegable (NUEVO) -->
+    <div class="category-select-wrapper">
+        <select id="category-select" onchange="filterCategory(this.value)"></select>
+        <!-- Icono de Flecha -->
+        <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </div>
 
+    <!-- Loader Visual -->
     <div class="loader" id="loader">Preparando la cocina...</div>
     
+    <!-- Render Dinámico -->
     <div class="menu-container" id="menu-container"></div>
 
     <script>
@@ -227,7 +250,7 @@
                 
                 document.getElementById('loader').style.display = 'none';
                 
-                // Filtrar disponibles
+                // Filtrar disponibles (Columna "Disponible" debe ser "Sí" o "si")
                 menuData = menuData.filter(item => {
                     const disp = String(item['Disponible']).toLowerCase().trim();
                     return disp === 'sí' || disp === 'si';
@@ -237,45 +260,54 @@
                 renderMenu('todos');
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('loader').innerText = 'Error al cargar el menú. Por favor, refresca.';
+                document.getElementById('loader').innerText = 'Error al cargar el menú. Por favor, refresca la página.';
             }
         }
 
+        // NUEVA FUNCIÓN: Llena el select con las categorías de tu Excel
         function renderCategories() {
-            const nav = document.getElementById('categories-nav');
-            const uniqueCategories = [...new Set(menuData.map(item => item['Categoría'].trim()))];
-            const allCategories = ['todos', ...uniqueCategories];
+            const select = document.getElementById('category-select');
             
-            nav.innerHTML = allCategories.map((cat, index) => `
-                <button class="category-btn ${index === 0 ? 'active' : ''}" onclick="filterCategory('${cat}', this)">
-                    ${cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </button>
-            `).join('');
+            // Extraer nombres de categorías únicos y limpiar espacios
+            const uniqueCategories = [...new Set(menuData.map(item => item['Categoría'].trim()))];
+            
+            // Crear el HTML de las opciones, empezando siempre por "Todos"
+            let optionsHtml = `<option value="todos">Ver Todas las Categorías</option>`;
+            
+            uniqueCategories.forEach(cat => {
+                // Capitalizar solo para mostrar bonito en la lista
+                const displayCat = cat.charAt(0).toUpperCase() + cat.slice(1);
+                optionsHtml += `<option value="${cat}">${displayCat}</option>`;
+            });
+            
+            select.innerHTML = optionsHtml;
         }
 
-        function filterCategory(category, button) {
-            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            renderMenu(category);
+        // NUEVA FUNCIÓN: Filtra al elegir una opción del dropdown
+        function filterCategory(categoryValue) {
+            renderMenu(categoryValue);
         }
 
+        // Función que pinta las tarjetas
         function renderMenu(categoryFilter) {
             const container = document.getElementById('menu-container');
+            
             const filtered = categoryFilter === 'todos' 
                 ? menuData 
                 : menuData.filter(item => item['Categoría'].trim() === categoryFilter);
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="loader">No hay platos en esta sección.</div>';
+                container.innerHTML = '<div class="loader">No hay platos disponibles en esta sección.</div>';
                 return;
             }
 
             container.innerHTML = filtered.map(item => {
+                // Formateador de moneda colombiana
                 const priceFormatted = new Intl.NumberFormat('es-CO', { 
                     style: 'currency', 
                     currency: 'COP', 
                     maximumFractionDigits: 0 
-                }).format(item['Precio']);
+                }).format(item['Precio'] || 0); // Maneja precios vacíos como $0 temporalmente
                 
                 const imageHtml = item['URL Imagen'] && item['URL Imagen'].startsWith('http')
                     ? `<img src="${item['URL Imagen']}" class="item-image" alt="${item['Nombre del Plato']}" loading="lazy">`
@@ -296,6 +328,7 @@
             }).join('');
         }
 
+        // Inicializar
         fetchMenu();
     </script>
 </body>
