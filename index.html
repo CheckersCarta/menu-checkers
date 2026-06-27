@@ -311,9 +311,20 @@
 
             let htmlOutput = '';
 
-            // NUEVA LÓGICA: Inyección del Banner de Categoría
-            if (categoryFilter !== 'todos') {
-                // Busca la primera imagen disponible dentro de esta categoría
+            // NUEVA LÓGICA: Banner General vs Banner de Categoría
+            if (categoryFilter === 'todos') {
+                // AQUI PONES EL ENLACE A TU IMAGEN GENERAL (WebP)
+                const bannerGeneral = 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80';
+                
+                htmlOutput += `
+                    <div class="category-banner" style="background-image: url('${bannerGeneral}');">
+                        <div class="banner-overlay">
+                            <h2>NUESTRO MENÚ</h2>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Busca la primera imagen de la categoría específica
                 const firstItemWithImage = filtered.find(item => item['URL Imagen'] && item['URL Imagen'].startsWith('http'));
                 
                 if (firstItemWithImage) {
@@ -338,7 +349,7 @@
                 
                 const hasImage = item['URL Imagen'] && item['URL Imagen'].startsWith('http');
                 
-                // Evitar repetir la imagen del banner en la tarjeta individual
+                // Ocultar la imagen en la tarjeta individual SOLO si ya se usó como banner de categoría
                 let isBannerImage = false;
                 if (categoryFilter !== 'todos') {
                     const firstItemWithImage = filtered.find(i => i['URL Imagen'] && i['URL Imagen'].startsWith('http'));
