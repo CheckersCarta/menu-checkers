@@ -9,6 +9,7 @@
     
     <title>Menú Digital | Checkers</title>
     
+    <!-- Tipografías -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Montserrat:wght@800;900&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
@@ -59,9 +60,8 @@
             align-items: center;
         }
 
-        /* Estilos del Logo */
         .brand-logo {
-            max-width: 180px; /* Tamaño máximo del logo, puedes ajustarlo */
+            max-width: 180px;
             width: auto;
             height: auto;
             margin-bottom: 15px;
@@ -139,38 +139,69 @@
         .menu-container {
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             padding-bottom: 50px;
+        }
+
+        /* NUEVO: Estilos del Banner de Categoría */
+        .category-banner {
+            width: 100%;
+            height: 220px;
+            border-radius: 28px;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(77, 54, 38, 0.1);
+            border: 2px solid var(--tertiary);
+        }
+        
+        .banner-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(77, 54, 38, 0.9), transparent);
+            padding: 50px 25px 20px;
+        }
+        
+        .banner-overlay h2 {
+            color: #FFFFFF;
+            font-family: var(--font-headline);
+            font-size: 2rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            text-transform: uppercase;
         }
 
         .menu-item {
             background: var(--card-bg);
-            border-radius: 28px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(77, 54, 38, 0.06);
+            box-shadow: 0 8px 25px rgba(77, 54, 38, 0.05);
             border: 1px solid rgba(241, 90, 36, 0.05);
         }
 
         .item-image {
             width: 100%;
-            height: 240px;
+            height: 220px;
             object-fit: cover;
-            border-bottom: 4px solid var(--tertiary);
+            border-bottom: 3px solid var(--tertiary);
         }
 
-        .item-info { padding: 25px; }
+        .item-info { padding: 22px; }
 
         .item-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             gap: 15px;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .item-title {
             font-family: var(--font-headline);
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--secondary);
             line-height: 1.2;
@@ -178,11 +209,11 @@
 
         .item-price {
             font-family: var(--font-label);
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #FFFFFF;
             background: var(--primary);
-            padding: 8px 18px;
+            padding: 6px 16px;
             border-radius: 20px;
             white-space: nowrap;
         }
@@ -191,7 +222,7 @@
             font-family: var(--font-body);
             font-size: 0.95rem;
             color: rgba(77, 54, 38, 0.7);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .loader {
@@ -209,10 +240,10 @@
     <div class="ambient-light light-bottom"></div>
 
     <header>
-        <!-- AQUI DEBES PEGAR EL ENLACE DE TU LOGO (Reemplaza la URL de abajo) -->
-        <img src="https://i.postimg.cc/MTqyZtkx/Logo2.png" class="brand-logo">
+        <!-- AQUI DEBES PEGAR EL ENLACE DE TU LOGO -->
+        <img src="https://via.placeholder.com/300x150/F9F5F0/F15A24?text=LOGO+CHECKERS" alt="Checkers Logo" class="brand-logo">
         
-        <h1 id="rest-title">MENÚ</h1>
+        <h1 id="rest-title">EL MENÚ</h1>
         <p>Selección del Día</p>
     </header>
 
@@ -278,7 +309,26 @@
                 return;
             }
 
-            container.innerHTML = filtered.map(item => {
+            let htmlOutput = '';
+
+            // NUEVA LÓGICA: Inyección del Banner de Categoría
+            if (categoryFilter !== 'todos') {
+                // Busca la primera imagen disponible dentro de esta categoría
+                const firstItemWithImage = filtered.find(item => item['URL Imagen'] && item['URL Imagen'].startsWith('http'));
+                
+                if (firstItemWithImage) {
+                    htmlOutput += `
+                        <div class="category-banner" style="background-image: url('${firstItemWithImage['URL Imagen']}');">
+                            <div class="banner-overlay">
+                                <h2>${categoryFilter}</h2>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Renderizado de las tarjetas compactas
+            htmlOutput += filtered.map(item => {
                 const rawPrice = item['Precio'] || 0;
                 const priceFormatted = new Intl.NumberFormat('es-CO', { 
                     style: 'currency', 
@@ -286,7 +336,20 @@
                     maximumFractionDigits: 0 
                 }).format(rawPrice);
                 
-                const imageHtml = item['URL Imagen'] && item['URL Imagen'].startsWith('http')
+                const hasImage = item['URL Imagen'] && item['URL Imagen'].startsWith('http');
+                
+                // Evitar repetir la imagen del banner en la tarjeta individual
+                let isBannerImage = false;
+                if (categoryFilter !== 'todos') {
+                    const firstItemWithImage = filtered.find(i => i['URL Imagen'] && i['URL Imagen'].startsWith('http'));
+                    if (firstItemWithImage && item['URL Imagen'] === firstItemWithImage['URL Imagen']) {
+                        isBannerImage = true;
+                    }
+                }
+
+                const shouldShowImage = hasImage && !isBannerImage;
+
+                const imageHtml = shouldShowImage
                     ? `<img src="${item['URL Imagen']}" class="item-image" alt="${item['Nombre del Plato']}" loading="lazy">`
                     : '';
                 
@@ -303,6 +366,8 @@
                     </div>
                 `;
             }).join('');
+
+            container.innerHTML = htmlOutput;
         }
 
         fetchMenu();
