@@ -3,18 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Etiquetas anti-caché para forzar la actualización del diseño -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     
     <title>Menú Digital | Checkers</title>
     
-    <!-- Importación del Sistema Tipográfico -->
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Montserrat:wght@800;900&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
-        /* Paleta de Colores */
         :root {
             --primary: #F15A24;
             --secondary: #4D3626;
@@ -41,7 +38,6 @@
             overflow-x: hidden;
         }
 
-        /* Luces de Fondo */
         .ambient-light {
             position: fixed;
             width: 350px;
@@ -58,6 +54,19 @@
         header {
             text-align: center;
             padding: 30px 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Estilos del Logo */
+        .brand-logo {
+            max-width: 180px; /* Tamaño máximo del logo, puedes ajustarlo */
+            width: auto;
+            height: auto;
+            margin-bottom: 15px;
+            object-fit: contain;
+            filter: drop-shadow(0px 4px 6px rgba(77, 54, 38, 0.1));
         }
 
         header h1 {
@@ -80,7 +89,6 @@
             margin-top: 5px;
         }
 
-        /* COMPONENTE DESPLEGABLE (Reemplaza a los botones horizontales) */
         .dropdown-container {
             position: relative;
             margin: 15px auto 30px auto;
@@ -128,7 +136,6 @@
             pointer-events: none;
         }
 
-        /* Contenedor de Tarjetas */
         .menu-container {
             display: flex;
             flex-direction: column;
@@ -136,7 +143,6 @@
             padding-bottom: 50px;
         }
 
-        /* Diseño de la Tarjeta */
         .menu-item {
             background: var(--card-bg);
             border-radius: 28px;
@@ -203,11 +209,13 @@
     <div class="ambient-light light-bottom"></div>
 
     <header>
-        <h1 id="rest-title">CHECKERS MENÚ</h1>
+        <!-- AQUI DEBES PEGAR EL ENLACE DE TU LOGO (Reemplaza la URL de abajo) -->
+        <img src="https://i.postimg.cc/4ddr068N/Logo.png" alt="Checkers Logo" class="brand-logo">
+        
+        <h1 id="rest-title">EL MENÚ</h1>
         <p>Selección del Día</p>
     </header>
 
-    <!-- EL NUEVO DESPLEGABLE -->
     <div class="dropdown-container">
         <select id="category-select" onchange="filterCategory(this.value)"></select>
         <svg class="dropdown-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7"></path></svg>
@@ -228,7 +236,6 @@
                 
                 document.getElementById('loader').style.display = 'none';
                 
-                // Filtro de disponibilidad
                 menuData = menuData.filter(item => {
                     const disp = String(item['Disponible']).toLowerCase().trim();
                     return disp === 'sí' || disp === 'si';
@@ -242,7 +249,6 @@
             }
         }
 
-        // Renderizar las opciones en el <select>
         function renderDropdown() {
             const select = document.getElementById('category-select');
             const uniqueCategories = [...new Set(menuData.map(item => item['Categoría'].trim()))];
@@ -257,12 +263,10 @@
             select.innerHTML = optionsHtml;
         }
 
-        // Función que se activa al cambiar el <select>
         function filterCategory(categoryValue) {
             renderMenu(categoryValue);
         }
 
-        // Renderizar Platos
         function renderMenu(categoryFilter) {
             const container = document.getElementById('menu-container');
             const filtered = categoryFilter === 'todos' 
@@ -275,7 +279,6 @@
             }
 
             container.innerHTML = filtered.map(item => {
-                // Si el precio está vacío, muestra 0 para que no se rompa el diseño
                 const rawPrice = item['Precio'] || 0;
                 const priceFormatted = new Intl.NumberFormat('es-CO', { 
                     style: 'currency', 
