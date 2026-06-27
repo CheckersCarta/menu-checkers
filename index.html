@@ -5,157 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Digital</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #0b0b0e;
-            --card-bg: #14141c;
+            --card-bg: rgba(20, 20, 28, 0.7);
             --text-main: #ffffff;
             --text-muted: #94a3b8;
-            --accent: #f59e0b; /* Dorado de alta fidelidad */
+            --accent: #F15A24; /* Tomé el naranja vibrante de tu código */
         }
 
-        * { 
-            margin: 0; 
-            padding: 0; 
-            box-sizing: border-box; 
-            font-family: 'Poppins', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
             padding: 15px;
-            max-width: 500px; /* Optimización estricta para pantallas móviles */
+            max-width: 500px;
             margin: 0 auto;
             min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        header {
-            text-align: center;
-            padding: 35px 0 15px;
+        /* 1. Elementos Decorativos de Fondo (Inspirado en tus Blobs) */
+        .ambient-light {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--accent);
+            filter: blur(120px);
+            opacity: 0.15;
+            z-index: -1;
+            pointer-events: none;
         }
+        .light-top { top: -100px; left: -100px; }
+        .light-bottom { bottom: -100px; right: -100px; }
 
+        header { text-align: center; padding: 40px 0 20px; }
+
+        /* 2. Tipografía Dual */
         header h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
             text-transform: uppercase;
-            background: linear-gradient(180deg, #fff 0%, #a1a1aa 100%);
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         header p {
             color: var(--accent);
-            font-size: 0.8rem;
-            letter-spacing: 3px;
+            font-size: 0.85rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-top: 5px;
             font-weight: 600;
+            margin-top: 5px;
         }
 
-        /* Barra de navegación de categorías deslizante */
         .categories-nav {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 10px 5px 25px;
-            scrollbar-width: none; /* Oculta scroll en Firefox */
+            display: flex; gap: 12px; overflow-x: auto; padding: 10px 5px 25px; scrollbar-width: none;
         }
-        
-        .categories-nav::-webkit-scrollbar { 
-            display: none; /* Oculta scroll en Chrome/Safari */
-        }
+        .categories-nav::-webkit-scrollbar { display: none; }
 
         .category-btn {
-            background: var(--card-bg);
+            background: rgba(255,255,255,0.03);
             color: var(--text-muted);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 10px 20px;
-            border-radius: 25px;
+            padding: 12px 24px;
+            border-radius: 30px;
             font-size: 0.85rem;
-            font-weight: 400;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
         .category-btn.active {
-            background: var(--accent);
-            color: #000000;
+            background: linear-gradient(135deg, var(--accent) 0%, #ff7b4d 100%);
+            color: #000;
             font-weight: 600;
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            border-color: transparent;
+            box-shadow: 0 10px 20px -5px rgba(241,90,36,0.4);
         }
 
-        /* Contenedor de la lista de platos */
-        .menu-container {
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-            padding-bottom: 40px;
-        }
+        .menu-container { display: flex; flex-direction: column; gap: 25px; padding-bottom: 50px; }
 
-        /* Tarjeta de cada plato */
+        /* 3. Tarjetas con Efecto Flotante y Neumorfismo Oscuro */
         .menu-item {
             background: var(--card-bg);
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            transition: transform 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Imagen del plato con enfoque visual dominante */
+        .menu-item:hover, .menu-item:active {
+            transform: translateY(-6px);
+            border-color: rgba(241,90,36,0.3);
+            box-shadow: 0 15px 35px -10px rgba(241,90,36,0.2);
+        }
+
         .item-image {
             width: 100%;
-            height: 240px;
+            height: 260px;
             object-fit: cover;
-            background-color: #1e1e24;
-            display: block;
         }
 
-        .item-info {
-            padding: 22px;
-        }
+        .item-info { padding: 25px; }
 
         .item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 10px;
         }
 
         .item-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            line-height: 1.3;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 800;
+            line-height: 1.2;
         }
 
+        /* Botón de precio redondeado al estilo de tu código */
         .item-price {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            color: var(--accent);
+            color: #000;
+            background: var(--accent);
+            padding: 6px 16px;
+            border-radius: 20px;
             white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(241,90,36,0.3);
         }
 
-        .item-description {
-            font-size: 0.88rem;
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-
-        /* Estado de carga */
-        .loader {
-            text-align: center;
-            padding: 40px 0;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-        }
-    </style>
-</head>
+        .item-description { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+        .loader { text-align: center; padding: 40px 0; color: var(--accent); }
+    </style></head>
 <body>
 
     <header>
