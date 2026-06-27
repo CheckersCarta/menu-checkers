@@ -4,162 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Digital</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@600;700&family=Montserrat:wght@800;900&family=Work+Sans:wght@400;500&display=swap" rel="stylesheet">
+    
     <style>
+        /* Paleta de Colores Extraída del Design System */
         :root {
-            --bg-color: #0b0b0e;
-            --card-bg: rgba(20, 20, 28, 0.7);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
-            --accent: #F15A24; /* Tomé el naranja vibrante de tu código */
+            --primary: #F15A24;
+            --secondary: #4D3626;
+            --tertiary: #FFC244;
+            --neutral: #F9F5F0;
+            --card-bg: #FFFFFF;
+            
+            /* Tipografías */
+            --font-headline: 'Montserrat', sans-serif;
+            --font-body: 'Work Sans', sans-serif;
+            --font-label: 'Be Vietnam Pro', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
+            background-color: var(--neutral);
+            color: var(--secondary);
+            font-family: var(--font-body);
             padding: 15px;
-            max-width: 500px;
+            max-width: 550px; /* Ancho óptimo para lectura móvil */
             margin: 0 auto;
             min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* 1. Elementos Decorativos de Fondo (Inspirado en tus Blobs) */
+        /* Elementos Decorativos de Fondo (Blobs) */
         .ambient-light {
             position: fixed;
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 350px;
             border-radius: 50%;
-            background: var(--accent);
-            filter: blur(120px);
+            filter: blur(100px);
             opacity: 0.15;
             z-index: -1;
             pointer-events: none;
         }
-        .light-top { top: -100px; left: -100px; }
-        .light-bottom { bottom: -100px; right: -100px; }
+        .light-top { 
+            top: -150px; 
+            left: -150px; 
+            background: var(--primary); 
+        }
+        .light-bottom { 
+            bottom: -100px; 
+            right: -150px; 
+            background: var(--tertiary); 
+        }
 
-        header { text-align: center; padding: 40px 0 20px; }
+        header {
+            text-align: center;
+            padding: 40px 0 25px;
+        }
 
-        /* 2. Tipografía Dual */
         header h1 {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.5rem;
+            font-family: var(--font-headline);
+            font-size: 2.8rem;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: -1px;
-            background: linear-gradient(135deg, #fff 0%, #a1a1aa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--secondary);
+            line-height: 1.1;
         }
 
         header p {
-            color: var(--accent);
+            font-family: var(--font-label);
+            color: var(--primary);
             font-size: 0.85rem;
             letter-spacing: 4px;
             text-transform: uppercase;
-            font-weight: 600;
-            margin-top: 5px;
+            font-weight: 700;
+            margin-top: 8px;
         }
 
+        /* Barra de navegación dinámica */
         .categories-nav {
-            display: flex; gap: 12px; overflow-x: auto; padding: 10px 5px 25px; scrollbar-width: none;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 5px 30px;
+            scrollbar-width: none;
         }
         .categories-nav::-webkit-scrollbar { display: none; }
 
         .category-btn {
-            background: rgba(255,255,255,0.03);
-            color: var(--text-muted);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 12px 24px;
+            font-family: var(--font-label);
+            background: var(--card-bg);
+            color: var(--secondary);
+            border: 2px solid transparent;
+            padding: 10px 22px;
             border-radius: 30px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(77, 54, 38, 0.05);
         }
 
         .category-btn.active {
-            background: linear-gradient(135deg, var(--accent) 0%, #ff7b4d 100%);
-            color: #000;
-            font-weight: 600;
-            border-color: transparent;
-            box-shadow: 0 10px 20px -5px rgba(241,90,36,0.4);
+            background: var(--primary);
+            color: #FFFFFF;
+            box-shadow: 0 8px 20px rgba(241, 90, 36, 0.3);
         }
 
-        .menu-container { display: flex; flex-direction: column; gap: 25px; padding-bottom: 50px; }
+        /* Contenedor de Tarjetas */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            padding-bottom: 50px;
+        }
 
-        /* 3. Tarjetas con Efecto Flotante y Neumorfismo Oscuro */
+        /* Diseño de la Tarjeta del Plato */
         .menu-item {
             background: var(--card-bg);
-            border-radius: 24px;
+            border-radius: 28px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(77, 54, 38, 0.06);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(241, 90, 36, 0.05);
         }
 
         .menu-item:hover, .menu-item:active {
-            transform: translateY(-6px);
-            border-color: rgba(241,90,36,0.3);
-            box-shadow: 0 15px 35px -10px rgba(241,90,36,0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(241, 90, 36, 0.15);
+            border-color: rgba(241, 90, 36, 0.2);
         }
 
         .item-image {
             width: 100%;
-            height: 260px;
+            height: 280px;
             object-fit: cover;
+            border-bottom: 4px solid var(--tertiary);
         }
 
-        .item-info { padding: 25px; }
+        .item-info {
+            padding: 25px;
+        }
 
         .item-header {
-            display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 12px;
         }
 
         .item-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.3rem;
+            font-family: var(--font-headline);
+            font-size: 1.4rem;
             font-weight: 800;
+            color: var(--secondary);
             line-height: 1.2;
         }
 
-        /* Botón de precio redondeado al estilo de tu código */
+        /* Etiqueta de Precio Destacada */
         .item-price {
-            font-size: 1.1rem;
+            font-family: var(--font-label);
+            font-size: 1.15rem;
             font-weight: 700;
-            color: #000;
-            background: var(--accent);
-            padding: 6px 16px;
+            color: #FFFFFF;
+            background: var(--primary);
+            padding: 8px 18px;
             border-radius: 20px;
             white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(241,90,36,0.3);
+            box-shadow: 0 6px 15px rgba(241, 90, 36, 0.25);
         }
 
-        .item-description { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
-        .loader { text-align: center; padding: 40px 0; color: var(--accent); }
-    </style></head>
+        .item-description {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: rgba(77, 54, 38, 0.7); /* Secundario con opacidad */
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--primary);
+            font-family: var(--font-label);
+            font-weight: 600;
+        }
+    </style>
+</head>
 <body>
 
+    <div class="ambient-light light-top"></div>
+    <div class="ambient-light light-bottom"></div>
+
     <header>
-        <h1 id="rest-title">MENÚ DIGITAL</h1>
-        <p>Precios Actualizados</p>
+        <h1 id="rest-title">EL MENÚ</h1>
+        <p>Selección del Día</p>
     </header>
 
     <nav class="categories-nav" id="categories-nav"></nav>
 
-    <div class="loader" id="loader">Consultando nuestra cocina...</div>
+    <div class="loader" id="loader">Preparando la cocina...</div>
     
     <div class="menu-container" id="menu-container"></div>
 
     <script>
-        // Endpoint conectado directamente a tu Google Sheets
+        // Endpoint conectado a tu App Script
         const API_URL = 'https://script.google.com/macros/s/AKfycbz8XBI_surAkTyRS_RxYUU75S0MNN-Fz0KLWeAVZG38mTKd7mIUn5OI580x8g3-14ch/exec';
         let menuData = [];
 
@@ -168,10 +225,9 @@
                 const response = await fetch(API_URL);
                 menuData = await response.json();
                 
-                // Ocultar el estado de carga
                 document.getElementById('loader').style.display = 'none';
                 
-                // Filtrar de forma estricta solo los productos marcados como "Sí" o "si" en disponibilidad
+                // Filtrar disponibles
                 menuData = menuData.filter(item => {
                     const disp = String(item['Disponible']).toLowerCase().trim();
                     return disp === 'sí' || disp === 'si';
@@ -180,14 +236,13 @@
                 renderCategories();
                 renderMenu('todos');
             } catch (error) {
-                console.error('Error cargando el menú:', error);
-                document.getElementById('loader').innerText = 'Hubo un inconveniente al cargar el menú. Por favor, refresca la página.';
+                console.error('Error:', error);
+                document.getElementById('loader').innerText = 'Error al cargar el menú. Por favor, refresca.';
             }
         }
 
         function renderCategories() {
             const nav = document.getElementById('categories-nav');
-            // Obtener categorías únicas presentes en la hoja de cálculo
             const uniqueCategories = [...new Set(menuData.map(item => item['Categoría'].trim()))];
             const allCategories = ['todos', ...uniqueCategories];
             
@@ -211,19 +266,17 @@
                 : menuData.filter(item => item['Categoría'].trim() === categoryFilter);
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="loader">No hay platos disponibles en esta sección.</div>';
+                container.innerHTML = '<div class="loader">No hay platos en esta sección.</div>';
                 return;
             }
 
             container.innerHTML = filtered.map(item => {
-                // Formatear precio de forma nativa a la estructura de moneda local
                 const priceFormatted = new Intl.NumberFormat('es-CO', { 
                     style: 'currency', 
                     currency: 'COP', 
                     maximumFractionDigits: 0 
                 }).format(item['Precio']);
                 
-                // Renderizar etiqueta de imagen solo si la celda tiene una URL válida
                 const imageHtml = item['URL Imagen'] && item['URL Imagen'].startsWith('http')
                     ? `<img src="${item['URL Imagen']}" class="item-image" alt="${item['Nombre del Plato']}" loading="lazy">`
                     : '';
@@ -243,7 +296,6 @@
             }).join('');
         }
 
-        // Ejecución inmediata de la consulta dinámica
         fetchMenu();
     </script>
 </body>
